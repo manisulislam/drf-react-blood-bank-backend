@@ -9,8 +9,8 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import smart_str, smart_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-
-
+from .utils import send_normal_email
+from rest_framework_simplejwt.tokens import RefreshToken,TokenError
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -75,20 +75,20 @@ class LogInSerializer(serializers.ModelSerializer):
         }
 
 class PasswordResetRequestSerializer(serializers.Serializer):
-    email=serializer.EmailField(max_length=255)
+    email=serializers.EmailField(max_length=255)
 
     class Meta:
         fields=['email']
 
     def validate(self, attrs):
         email=attrs.get('email')
-        if User.objects.filter(email=email).exist():
+        if User.objects.filter(email=email).exists():
             user=User.objects.get(email=email)
             uidb64=urlsafe_base64_encode(smart_bytes(user.id))
             token=PasswordResetTokenGenerator().make_token(user)
             request=self.context.get('request')
             site_domain=get_current_site(request).domain
-            relative_link=reverse('password-reset-confirm',kwargs={'uidb64':uidb64,'token':token})
+            relative_link=reverse('password_reset_confirm',kwargs={'uidb64':uidb64,'token':token})
             absolute_link=f"http://{site_domain}{relative_link}"
             email_body=f"hi use the link to reset your password \n {absolute_link}"
             data ={
@@ -102,10 +102,10 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
-    password=serializer.CharField(max_length=68, min_length=6, write_only=True)
-    confirm_password=serializer.CharField(max_length=68, min_length=6, write_only=True)
-    uidb64=serializer.CharField(write_only=True)
-    token=serializer.CharField(write_only=True)
+    password=serializers.CharField(max_length=68, min_length=6, write_only=True)
+    confirm_password=serializers.CharField(max_length=68, min_length=6, write_only=True)
+    uidb64=serializers.CharField(write_only=True)
+    token=serializers.CharField(write_only=True)
 
     class Meta:
         fields=['password','confirm_password','uidb64','token']
@@ -133,4 +133,23 @@ class SetNewPasswordSerializer(serializers.Serializer):
 
 
         
+
+class LogOutUserSerializer(serializers.Serializer):
+    refresh_token=serializers.CharField()
+
+    def validate(self, attrs):
+        self.refresh_token=attrs.get('refresh_token')
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            token=RefreshToken(self.token)
+            token.blacklist()
+
+        except TokenError:
+            return self.fail('bad token')
+
+
+
+    
 

@@ -23,6 +23,6 @@ def send_normal_email(data):
         subject=data['email_subject'],
         body=data['email_body'],
         from_email=settings.EMAIL_HOST,
-        to=data['to_email']
+        to=[data['to_email']]
     )
     email.send()

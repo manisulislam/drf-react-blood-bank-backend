@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import UserRegisterSerializer,LogInSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer
+from .serializers import UserRegisterSerializer,LogInSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer,LogOutUserSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -67,7 +67,7 @@ class PasswordResetRequestView(GenericAPIView):
     serializer_class=PasswordResetRequestSerializer
 
     def post(self, request):
-        serializer=self.serializer(data=request.data, context={'request':request})
+        serializer=self.serializer_class(data=request.data, context={'request':request})
         serializer.is_valid(raise_exception=True)
         return Response({
             'message':'a link has to be sent to your email to reset password'
@@ -91,9 +91,20 @@ class PasswordResetConfirmView(GenericAPIView):
             return Response({'massage':'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class SetNewPasswordView(GenericAPIView):
+
     serializer_class=SetNewPasswordSerializer
 
     def patch(self, request):
         serializer=self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'message':'password reset successfully'}, status=status.HTTP_200_OK)
+
+class LogOutUserView(GenericAPIView):
+    serializer_class=LogOutUserSerializer
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+        serializer=self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
