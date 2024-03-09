@@ -20,7 +20,7 @@ DEBUG=env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL='accounts.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -118,3 +118,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#email send
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER=env('EMAIL_USER')
+EMAIL_HOST_PASSWORD=env('EMAIL_PASSWORD')
