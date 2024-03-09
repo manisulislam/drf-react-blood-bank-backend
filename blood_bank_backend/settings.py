@@ -1,4 +1,5 @@
 import environ
+from datetime import timedelta
 env=environ.Env(
     DEBUG=(bool,False)
 )
@@ -33,8 +34,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     "corsheaders",
+    'rest_framework_simplejwt',
 ]
-
+REST_FRAMEWORK = {
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+    
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,3 +134,10 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER=env('EMAIL_USER')
 EMAIL_HOST_PASSWORD=env('EMAIL_PASSWORD')
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
