@@ -23,7 +23,12 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL='accounts.User'
 # Application definition
-
+CORS_ALLOW_ALL_ORIGINS=True
+CSRF_TRUSTED_ORIGINS = [
+    
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
