@@ -138,7 +138,7 @@ class LogOutUserSerializer(serializers.Serializer):
     refresh_token=serializers.CharField()
 
     def validate(self, attrs):
-        self.refresh_token=attrs.get('refresh_token')
+        self.token=attrs.get('refresh_token')
         return attrs
 
     def save(self, **kwargs):
@@ -147,7 +147,9 @@ class LogOutUserSerializer(serializers.Serializer):
             token.blacklist()
 
         except TokenError:
-            return self.fail('bad token')
+            return Response({
+                'message':"token error"
+            }, status=status.HTTP_204_NO_CONTENT)
 
 
 
