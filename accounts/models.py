@@ -42,3 +42,16 @@ class OneTimePassword(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} passcode"
+
+
+class UserInfo(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    age=models.CharField(max_length=4)
+    address=models.CharField(max_length=255)
+    last_donation_date=models.DateTimeField()
+    isDonate=models.BooleanField(default=False)
+    blood_group=models.CharField(max_length=30)
+
+
+    def __str__(self):
+        return self.user.first_name

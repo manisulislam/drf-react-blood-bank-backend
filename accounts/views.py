@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import UserRegisterSerializer,LogInSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer,LogOutUserSerializer
+from .serializers import UserRegisterSerializer,LogInSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer,LogOutUserSerializer,UserInfoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -100,6 +100,7 @@ class SetNewPasswordView(GenericAPIView):
         return Response({'message':'password reset successfully'}, status=status.HTTP_200_OK)
 
 class LogOutUserView(GenericAPIView):
+
     serializer_class=LogOutUserSerializer
     permission_classes=[IsAuthenticated]
 
@@ -108,3 +109,14 @@ class LogOutUserView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_200_OK)
+
+class UserInfoView(GenericAPIView):
+    serializer_class=UserInfoSerializer
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+        serializer=self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.error, status=status.HTTP_204_NO_CONTENT)

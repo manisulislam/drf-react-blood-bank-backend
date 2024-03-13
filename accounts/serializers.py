@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from .models import User
+from .models import User,UserInfo
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -154,4 +154,10 @@ class LogOutUserSerializer(serializers.Serializer):
 
 
     
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=UserInfo
+        fields=['age','address','last_donation_date','isDonate','blood_group']
+
 
