@@ -6,6 +6,6 @@ from .models import ContactUs
 # Create your views here.
 
 class ContactUsView(ListCreateAPIView):
-    serializer=ContactUsSerializer
+    serializer_class=ContactUsSerializer
     permission_classes=[IsAuthenticated]
     model=ContactUs
