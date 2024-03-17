@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'contact',
-    'blog'
+    'blog',
+    'blood_app'
 ]
 REST_FRAMEWORK = {
     
