@@ -7,4 +7,4 @@ from .models import BlogModel
 
 class BlogView(ListAPIView):
     serializer_class=BlogSerializer
-    model=BlogModel
+    queryset = BlogModel.objects.all()
