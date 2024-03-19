@@ -13,3 +13,11 @@ class BloodEventModel(models.Model):
     def __str__(self):
         return self.title
 
+class DonorModel(models.Model):
+    name=models.CharField(max_length=100)
+    blood_group=models.CharField(max_length=100)
+    location=models.CharField(max_length=100)
+    phone_number=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
